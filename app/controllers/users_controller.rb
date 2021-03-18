@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
     before_action :initialize_user, only: [:edit, :update, :show, :destory]
 
+    def show
+        
+    end
+
     def new
         @user = User.new
     end
