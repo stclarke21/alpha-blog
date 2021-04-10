@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
     before_action :initialize_user, only: [:edit, :update, :show, :destory]
+    before_action :require_user, except: [:show, :index]
 
     def show
         
@@ -14,12 +15,12 @@ class UsersController < ApplicationController
     end
 
     def edit
-
     end
 
     def create
         @user = User.new(users_params)
         if @user.save
+            session[:user_id] = @user.id
             flash[:notice] = "Welcome to the alpha blog #{@user.name} you have successfully signed up"
             redirect_to @user        
         else
@@ -44,5 +45,11 @@ class UsersController < ApplicationController
 
     def users_params
         params.require(:user).permit(:name, :email, :password)
+    end
+
+    def require_same_user
+        if !current_user == @user
+            flash[:notice] = "You may only edit or delete your own user"
+        end
     end
 end
